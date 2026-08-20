@@ -64,7 +64,7 @@
 
     <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
       <a href="https://store.steampowered.com/search/?term=Moose%20Migration" target="_blank" rel="noopener" style="padding:16px 30px;border-radius:9px;font-weight:500;font-size:13px;letter-spacing:0.1em;color:#000000;background:linear-gradient(115deg,#DFF88E,#7BEAF2 42%,#68B6FA 68%,#6F6BF5)" style-hover="color:#000000;filter:brightness(1.09)">MOOSE MIGRATION ON STEAM</a>
-      <a href="mailto:hello@gamedreaming.com" style="padding:16px 30px;border-radius:9px;font-weight:500;font-size:13px;letter-spacing:0.1em;color:#EDEFF2;border:1px solid rgba(237,239,242,0.28);background:rgba(0,0,0,0.35);backdrop-filter:blur(6px)" style-hover="color:#EDEFF2;border-color:rgba(123,234,242,0.65)">HELLO@GAMEDREAMING.COM</a>
+      <a href="{{ mailHref }}" onClick="{{ onContact }}" style="padding:16px 30px;border-radius:9px;font-weight:500;font-size:13px;letter-spacing:0.1em;color:#EDEFF2;border:1px solid rgba(237,239,242,0.28);background:rgba(0,0,0,0.35);backdrop-filter:blur(6px)" style-hover="color:#EDEFF2;border-color:rgba(123,234,242,0.65)">CONTACT<span>{{ mailSuffix }}</span></a>
     </div>
   </section>
 
@@ -81,5 +81,28 @@
   </footer>
 </main>
 </x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { revealed: false };
+  address() {
+    const user = ['o', 'l', 'l', 'e', 'h'].reverse().join('');
+    const host = ['gamedreaming', 'com'].join('.');
+    return user + String.fromCharCode(64) + host;
+  }
+  renderVals() {
+    const addr = this.address();
+    return {
+      mailHref: this.state.revealed ? 'mailto:' + addr : '#',
+      mailSuffix: this.state.revealed ? ' · ' + addr.toUpperCase() : '',
+      onContact: (e) => {
+        if (this.state.revealed) return;
+        e.preventDefault();
+        this.setState({ revealed: true });
+        window.setTimeout(() => { window.location.href = 'mailto:' + addr; }, 60);
+      }
+    };
+  }
+}
+</script>
 </body>
 </html>
